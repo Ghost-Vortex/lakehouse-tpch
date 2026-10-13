@@ -1,0 +1,41 @@
+round 1 {'format': 'ORC', 'codec': 'ZSTD', 'size_mb': 193.72, 'write_s': 19.24, 'q10_s': 1.221, 'q10_cpu_s': 1.42, 'agg_s': 0.981, 'agg_cpu_s': 2.52}
+round 1 {'format': 'ORC', 'codec': 'GZIP', 'size_mb': 187.96, 'write_s': 32.51, 'q10_s': 1.042, 'q10_cpu_s': 1.19, 'agg_s': 0.906, 'agg_cpu_s': 2.3}
+round 1 PARQUET/LZ4: пропущено — TrinoUserError(type=USER_ERROR, name=NOT_SUPPORTED, message="Compression codec LZ4 not supported for Parquet", query_id=20261013_122024_00834_ddpez)
+round 1 {'format': 'ORC', 'codec': 'LZ4', 'size_mb': 290.38, 'write_s': 23.33, 'q10_s': 1.139, 'q10_cpu_s': 1.44, 'agg_s': 0.808, 'agg_cpu_s': 2.46}
+round 1 {'format': 'PARQUET', 'codec': 'SNAPPY', 'size_mb': 261.34, 'write_s': 16.63, 'q10_s': 1.292, 'q10_cpu_s': 1.57, 'agg_s': 0.498, 'agg_cpu_s': 1.37}
+round 1 {'format': 'PARQUET', 'codec': 'ZSTD', 'size_mb': 190.19, 'write_s': 17.66, 'q10_s': 1.137, 'q10_cpu_s': 1.38, 'agg_s': 0.54, 'agg_cpu_s': 1.43}
+round 1 {'format': 'PARQUET', 'codec': 'NONE', 'size_mb': 486.2, 'write_s': 21.92, 'q10_s': 0.963, 'q10_cpu_s': 0.99, 'agg_s': 0.307, 'agg_cpu_s': 0.6}
+round 1 {'format': 'PARQUET', 'codec': 'GZIP', 'size_mb': 184.88, 'write_s': 23.82, 'q10_s': 1.066, 'q10_cpu_s': 1.41, 'agg_s': 0.586, 'agg_cpu_s': 1.43}
+round 1 {'format': 'ORC', 'codec': 'SNAPPY', 'size_mb': 267.64, 'write_s': 15.0, 'q10_s': 1.013, 'q10_cpu_s': 1.35, 'agg_s': 0.722, 'agg_cpu_s': 2.2}
+round 1 {'format': 'ORC', 'codec': 'NONE', 'size_mb': 549.01, 'write_s': 16.7, 'q10_s': 1.092, 'q10_cpu_s': 1.52, 'agg_s': 0.61, 'agg_cpu_s': 2.38}
+round 2 {'format': 'PARQUET', 'codec': 'SNAPPY', 'size_mb': 261.29, 'write_s': 14.35, 'q10_s': 1.315, 'q10_cpu_s': 1.61, 'agg_s': 0.37, 'agg_cpu_s': 1.0}
+round 2 {'format': 'ORC', 'codec': 'NONE', 'size_mb': 548.99, 'write_s': 17.43, 'q10_s': 0.959, 'q10_cpu_s': 1.14, 'agg_s': 0.392, 'agg_cpu_s': 1.6}
+round 2 {'format': 'ORC', 'codec': 'ZSTD', 'size_mb': 193.68, 'write_s': 14.74, 'q10_s': 1.098, 'q10_cpu_s': 1.34, 'agg_s': 0.816, 'agg_cpu_s': 2.17}
+round 2 {'format': 'ORC', 'codec': 'GZIP', 'size_mb': 187.98, 'write_s': 22.2, 'q10_s': 1.121, 'q10_cpu_s': 1.41, 'agg_s': 0.565, 'agg_cpu_s': 1.39}
+round 2 {'format': 'PARQUET', 'codec': 'ZSTD', 'size_mb': 190.24, 'write_s': 16.2, 'q10_s': 1.022, 'q10_cpu_s': 1.31, 'agg_s': 0.305, 'agg_cpu_s': 0.63}
+round 2 {'format': 'ORC', 'codec': 'LZ4', 'size_mb': 290.36, 'write_s': 16.74, 'q10_s': 0.754, 'q10_cpu_s': 0.79, 'agg_s': 0.963, 'agg_cpu_s': 3.03}
+round 2 PARQUET/LZ4: пропущено — TrinoUserError(type=USER_ERROR, name=NOT_SUPPORTED, message="Compression codec LZ4 not supported for Parquet", query_id=20261013_122844_01371_ddpez)
+round 2 {'format': 'PARQUET', 'codec': 'NONE', 'size_mb': 486.16, 'write_s': 18.85, 'q10_s': 1.143, 'q10_cpu_s': 1.22, 'agg_s': 0.35, 'agg_cpu_s': 0.83}
+round 2 {'format': 'ORC', 'codec': 'SNAPPY', 'size_mb': 267.66, 'write_s': 14.39, 'q10_s': 0.991, 'q10_cpu_s': 1.27, 'agg_s': 0.837, 'agg_cpu_s': 2.59}
+round 2 {'format': 'PARQUET', 'codec': 'GZIP', 'size_mb': 184.91, 'write_s': 26.71, 'q10_s': 1.255, 'q10_cpu_s': 1.71, 'agg_s': 0.576, 'agg_cpu_s': 1.38}
+round 3 {'format': 'PARQUET', 'codec': 'SNAPPY', 'size_mb': 261.3, 'write_s': 18.41, 'q10_s': 1.279, 'q10_cpu_s': 1.47, 'agg_s': 0.546, 'agg_cpu_s': 1.45}
+round 3 {'format': 'PARQUET', 'codec': 'NONE', 'size_mb': 486.21, 'write_s': 17.32, 'q10_s': 0.944, 'q10_cpu_s': 1.01, 'agg_s': 0.332, 'agg_cpu_s': 0.69}
+round 3 {'format': 'PARQUET', 'codec': 'ZSTD', 'size_mb': 190.08, 'write_s': 13.38, 'q10_s': 1.274, 'q10_cpu_s': 1.55, 'agg_s': 0.443, 'agg_cpu_s': 1.13}
+round 3 {'format': 'ORC', 'codec': 'GZIP', 'size_mb': 187.97, 'write_s': 18.24, 'q10_s': 1.002, 'q10_cpu_s': 1.19, 'agg_s': 0.532, 'agg_cpu_s': 1.31}
+round 3 PARQUET/LZ4: пропущено — TrinoUserError(type=USER_ERROR, name=NOT_SUPPORTED, message="Compression codec LZ4 not supported for Parquet", query_id=20261013_123302_01663_ddpez)
+round 3 {'format': 'ORC', 'codec': 'LZ4', 'size_mb': 290.39, 'write_s': 16.81, 'q10_s': 1.011, 'q10_cpu_s': 1.34, 'agg_s': 0.574, 'agg_cpu_s': 1.69}
+round 3 {'format': 'ORC', 'codec': 'SNAPPY', 'size_mb': 267.65, 'write_s': 21.95, 'q10_s': 1.205, 'q10_cpu_s': 1.44, 'agg_s': 0.713, 'agg_cpu_s': 2.15}
+round 3 {'format': 'PARQUET', 'codec': 'GZIP', 'size_mb': 184.88, 'write_s': 27.96, 'q10_s': 1.301, 'q10_cpu_s': 1.73, 'agg_s': 0.642, 'agg_cpu_s': 1.6}
+round 3 {'format': 'ORC', 'codec': 'NONE', 'size_mb': 548.98, 'write_s': 29.52, 'q10_s': 1.184, 'q10_cpu_s': 1.68, 'agg_s': 0.704, 'agg_cpu_s': 3.21}
+round 3 {'format': 'ORC', 'codec': 'ZSTD', 'size_mb': 193.74, 'write_s': 19.23, 'q10_s': 1.011, 'q10_cpu_s': 1.32, 'agg_s': 0.384, 'agg_cpu_s': 0.98}
+| Формат | Кодек | Размер, МБ | Сжатие к PARQUET/NONE | Запись, с | Q10, с | Q10 разброс | Q10 CPU, с | Агрегация, с | Агрегация разброс | Агрегация CPU, с |
+|---|---|---|---|---|---|---|---|---|---|---|
+| PARQUET | NONE | 486.2 | x1.00 | 18.85 | 0.963 | 0.94..1.14 | 1.01 | 0.332 | 0.31..0.35 | 0.69 |
+| PARQUET | SNAPPY | 261.3 | x1.86 | 16.63 | 1.292 | 1.28..1.31 | 1.57 | 0.498 | 0.37..0.55 | 1.37 |
+| PARQUET | ZSTD | 190.19 | x2.56 | 16.2 | 1.137 | 1.02..1.27 | 1.38 | 0.443 | 0.30..0.54 | 1.13 |
+| PARQUET | GZIP | 184.88 | x2.63 | 26.71 | 1.255 | 1.07..1.30 | 1.71 | 0.586 | 0.58..0.64 | 1.43 |
+| ORC | NONE | 548.99 | x0.89 | 17.43 | 1.092 | 0.96..1.18 | 1.52 | 0.61 | 0.39..0.70 | 2.38 |
+| ORC | SNAPPY | 267.65 | x1.82 | 15.0 | 1.013 | 0.99..1.21 | 1.35 | 0.722 | 0.71..0.84 | 2.2 |
+| ORC | LZ4 | 290.38 | x1.67 | 16.81 | 1.011 | 0.75..1.14 | 1.34 | 0.808 | 0.57..0.96 | 2.46 |
+| ORC | ZSTD | 193.72 | x2.51 | 19.23 | 1.098 | 1.01..1.22 | 1.34 | 0.816 | 0.38..0.98 | 2.17 |
+| ORC | GZIP | 187.97 | x2.59 | 22.2 | 1.042 | 1.00..1.12 | 1.19 | 0.565 | 0.53..0.91 | 1.39 |

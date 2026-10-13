@@ -1,0 +1,49 @@
+scale = sf1
+
+=== 01_bronze.sql ===
+[   0.03s] SET SESSION lakehouse.compression_codec = 'ZSTD'
+[   0.02s] CREATE SCHEMA IF NOT EXISTS lakehouse.bronze
+[   0.05s] DROP TABLE IF EXISTS lakehouse.bronze.region
+[   0.01s] DROP TABLE IF EXISTS lakehouse.bronze.nation
+[   0.01s] DROP TABLE IF EXISTS lakehouse.bronze.customer
+[   0.01s] DROP TABLE IF EXISTS lakehouse.bronze.orders
+[   0.01s] DROP TABLE IF EXISTS lakehouse.bronze.lineitem
+[   2.02s] CREATE TABLE lakehouse.bronze.region WITH (format = 'PARQUET') AS S...
+[   0.30s] CREATE TABLE lakehouse.bronze.nation WITH (format = 'PARQUET') AS S...
+[   1.13s] CREATE TABLE lakehouse.bronze.customer WITH (format = 'PARQUET') AS...
+[   2.93s] CREATE TABLE lakehouse.bronze.orders WITH (format = 'PARQUET') AS S...
+[   8.39s] CREATE TABLE lakehouse.bronze.lineitem WITH (format = 'PARQUET') AS...
+
+=== 02_silver.sql ===
+[   0.02s] SET SESSION lakehouse.compression_codec = 'ZSTD'
+[   0.02s] CREATE SCHEMA IF NOT EXISTS lakehouse.silver
+[   0.02s] DROP TABLE IF EXISTS lakehouse.silver.customer
+[   0.02s] DROP TABLE IF EXISTS lakehouse.silver.order_lines
+[   2.82s] CREATE TABLE lakehouse.silver.customer WITH (format = 'PARQUET') AS...
+[  25.81s] CREATE TABLE lakehouse.silver.order_lines WITH ( format = 'PARQUET'...
+
+=== 03_gold.sql ===
+[   0.03s] SET SESSION lakehouse.compression_codec = 'ZSTD'
+[   0.02s] CREATE SCHEMA IF NOT EXISTS lakehouse.gold
+[   0.02s] DROP TABLE IF EXISTS lakehouse.gold.q10_returned_customers
+[   0.02s] DROP TABLE IF EXISTS lakehouse.gold.returns_by_nation_quarter
+[   1.56s] CREATE TABLE lakehouse.gold.q10_returned_customers WITH (format = '...
+[   3.44s] CREATE TABLE lakehouse.gold.returns_by_nation_quarter WITH (format ...
+
+=== 04_checks.sql ===
+[   0.60s] SELECT 'bronze.customer' AS t, count(*) AS cnt FROM lakehouse.bronz...
+   t | cnt
+   bronze.nation | 25
+   silver.customer | 150000
+   bronze.orders | 1500000
+   gold.q10_returned_customers | 20
+   bronze.lineitem | 6001215
+   bronze.customer | 150000
+   silver.order_lines | 6001215
+   gold.returns_by_nation_quarter | 350
+   bronze.region | 5
+[   3.98s] WITH ref AS ( SELECT c.custkey, round(sum(l.extendedprice * (1 - l....
+   custkey | ref_revenue | gold_revenue
+   (0 rows)
+
+тайминги сохранены в results/pipeline_timings.md
