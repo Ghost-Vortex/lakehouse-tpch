@@ -1,0 +1,161 @@
+name: lakehouse
+
+x-lakekeeper-env: &lakekeeper-env
+  LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY}
+  LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DB}
+  LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DB}
+  RUST_LOG: info
+
+services:
+  # Объектное хранилище: сюда физически пишутся parquet/orc-файлы и metadata.json Iceberg
+  minio:
+    image: minio/minio:latest
+    container_name: lakehouse-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      retries: 10
+
+  # Создаём бакет warehouse один раз при старте
+  minio-init:
+    image: minio/minio:latest
+    container_name: lakehouse-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 ${MINIO_USER} ${MINIO_PASSWORD} &&
+      mc mb --ignore-existing local/warehouse"
+    restart: "no"
+
+  # Postgres — хранилище метаданных каталога Lakekeeper
+  postgres:
+    image: postgres:17-alpine
+    container_name: lakehouse-pg
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER} -d ${PG_DB}"]
+      interval: 5s
+      retries: 10
+
+  # Миграции схемы Lakekeeper в Postgres
+  lakekeeper-migrate:
+    image: quay.io/lakekeeper/catalog:v0.9.5
+    container_name: lakekeeper-migrate
+    environment: *lakekeeper-env
+    command: ["migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  # Iceberg REST Catalog
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:v0.9.5
+    container_name: lakekeeper
+    environment: *lakekeeper-env
+    command: ["serve"]
+    ports:
+      - "8181:8181"
+    depends_on:
+      lakekeeper-migrate:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 5s
+      retries: 20
+
+  # Bootstrap сервера + создание warehouse "lakehouse" поверх бакета MinIO
+  lakekeeper-init:
+    image: curlimages/curl:8.11.1
+    container_name: lakekeeper-init
+    depends_on:
+      lakekeeper:
+        condition: service_healthy
+    volumes:
+      - ./lakekeeper:/init:ro
+    entrypoint: ["/bin/sh", "/init/init.sh"]
+    restart: "no"
+
+  # SQL-движок
+  trino:
+    image: trinodb/trino:476
+    container_name: trino
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog:ro
+      - ./trino/jvm.config:/etc/trino/jvm.config:ro
+      - ./trino/config.properties:/etc/trino/config.properties:ro
+    depends_on:
+      lakekeeper-init:
+        condition: service_completed_successfully
+
+  # Spark — второй движок поверх того же каталога (часть 6.2).
+  # Запускается отдельно: docker compose --profile spark run --rm spark
+  spark:
+    image: apache/spark:3.5.3
+    container_name: spark
+    profiles: ["spark"]
+    user: root
+    volumes:
+      - ./spark:/opt/demo:ro
+      - spark-ivy:/root/.ivy2
+    command:
+      - /opt/spark/bin/spark-submit
+      - --master
+      - local[4]
+      - --driver-memory
+      - 2g
+      - --packages
+      - org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.7.1,org.apache.iceberg:iceberg-aws-bundle:1.7.1
+      - --conf
+      - spark.jars.ivy=/root/.ivy2
+      - --conf
+      - spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+      - --conf
+      - spark.sql.catalog.lakehouse=org.apache.iceberg.spark.SparkCatalog
+      - --conf
+      - spark.sql.catalog.lakehouse.type=rest
+      - --conf
+      - spark.sql.catalog.lakehouse.uri=http://lakekeeper:8181/catalog
+      - --conf
+      - spark.sql.catalog.lakehouse.warehouse=lakehouse
+      - --conf
+      - spark.sql.catalog.lakehouse.io-impl=org.apache.iceberg.aws.s3.S3FileIO
+      - --conf
+      - spark.sql.catalog.lakehouse.s3.endpoint=http://minio:9000
+      - --conf
+      - spark.sql.catalog.lakehouse.s3.path-style-access=true
+      - --conf
+      - spark.sql.catalog.lakehouse.s3.access-key-id=${MINIO_USER}
+      - --conf
+      - spark.sql.catalog.lakehouse.s3.secret-access-key=${MINIO_PASSWORD}
+      - --conf
+      - spark.sql.catalog.lakehouse.client.region=us-east-1
+      - /opt/demo/bronze_demo.py
+    depends_on:
+      trino:
+        condition: service_started
+
+volumes:
+  minio-data:
+  pg-data:
+  spark-ivy:
